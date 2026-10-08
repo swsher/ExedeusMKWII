@@ -74,17 +74,17 @@ fn get_custom_mii() -> Result<rkg_utils::Mii, Box<dyn Error>> {
 
 fn main() -> Result<(), Box<dyn Error>> {
 
-    let ghost_string = fs::read_to_string("../../test1.txt")?;
+    let ghost_string = fs::read_to_string("../../files/testbc.txt")?;
 
     // constructing the header
 
-    let ms_in_ghost = ((ghost_string.len()-(172*2)) as f64 * 500.0 * (1.0/60.0) + 1.0) as u32;
+    let ms_in_ghost = (ghost_string.len() as f64 * 500.0 * (1.0/60.0) + 1.0) as u32;
     let igt = rkg_utils::header::InGameTime::from_milliseconds(ms_in_ghost)?;
 
-    let slot_id = rkg_utils::header::SlotId::LuigiCircuit;
+    let slot_id = rkg_utils::header::SlotId::BowsersCastle;
 
-    let vehicle = rkg_utils::header::combo::Vehicle::BoosterSeat;
-    let character = rkg_utils::header::combo::Character::BabyLuigi;
+    let vehicle = rkg_utils::header::combo::Vehicle::Jetsetter;
+    let character = rkg_utils::header::combo::Character::Waluigi;
     let combo = rkg_utils::Combo::new(vehicle, character)?;
 
     let date = rkg_utils::header::Date::new(2067, 6, 7)?;
@@ -117,13 +117,8 @@ fn main() -> Result<(), Box<dyn Error>> {
     let mut controller_inputs = Vec::new();
     let mut even = false;
     let mut input_token = String::from("");
-    let mut intro_ignore = 172*2; // time for startup sequence for which I store input but rkg doesnt
 
     for c in ghost_string.chars() {
-        if intro_ignore > 0 {
-            intro_ignore -= 1;
-            continue;
-        }
         input_token.push(c);
         if even {
             let x: u8 = input_token.parse().unwrap();
@@ -143,7 +138,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     let mut ghost = rkg_utils::Ghost::new(header, input_data);
 
-    let _ = ghost.save_to_file("../../test1.rkg")?;
+    let _ = ghost.save_to_file("../../files/testbc.rkg")?;
 
     Ok(())
 }
